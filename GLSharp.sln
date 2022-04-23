@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLSharp", "GLSharp\GLSharp.csproj", "{1A9DF3F7-0B39-4FC9-857D-E3BD3001C8EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLSharp.Testapp", "GLSharp.Testapp\GLSharp.Testapp.csproj", "{B0D3361A-5A70-433B-B560-B284A71AE46E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileGenerators", "FileGenerators\FileGenerators.csproj", "{BFE964E1-A8C3-45DF-B2ED-DB022C18B1DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{1A9DF3F7-0B39-4FC9-857D-E3BD3001C8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A9DF3F7-0B39-4FC9-857D-E3BD3001C8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A9DF3F7-0B39-4FC9-857D-E3BD3001C8EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0D3361A-5A70-433B-B560-B284A71AE46E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0D3361A-5A70-433B-B560-B284A71AE46E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0D3361A-5A70-433B-B560-B284A71AE46E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0D3361A-5A70-433B-B560-B284A71AE46E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFE964E1-A8C3-45DF-B2ED-DB022C18B1DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFE964E1-A8C3-45DF-B2ED-DB022C18B1DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFE964E1-A8C3-45DF-B2ED-DB022C18B1DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFE964E1-A8C3-45DF-B2ED-DB022C18B1DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
