@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GLSharp
+{
+    public partial class GL
+    {
+        public void Vertex2(Vector2 vertex)
+        {
+            Vertex2f(vertex.X, vertex.Y);
+        }
+
+        public void Vertex3(Vector3 vertex)
+        {
+            Vertex3f(vertex.X, vertex.Y, vertex.Z);
+        }
+
+        public void Begin(PrimitiveType primitiveType)
+        {
+            Begin((uint)primitiveType);
+        }
+
+        public void BlendFunc(Blendfactor source, Blendfactor destination)
+        {
+            BlendFunc((uint)source, (uint)destination);
+        }
+    }
+}
