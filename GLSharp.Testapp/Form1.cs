@@ -5,6 +5,7 @@ namespace GLSharp.Testapp
     public partial class Form1 : Form
     {
         RenderContext ctx;
+        FrameBufferObject fbo;
         float angle = 0;
 
         public Form1()
@@ -13,6 +14,24 @@ namespace GLSharp.Testapp
 
             ctx = new NormalRenderContext(Handle);
             ctx.MakeCurrent();
+            ctx.Resize();
+            fbo = new FrameBufferObject(ctx.Width, ctx.Height, 8);
+            ctx.Resize();
+
+            this.ResizeEnd += Form1_ResizeEnd;
+            this.Resize += Form1_Resize;
+        }
+
+        private void Form1_Resize(object? sender, EventArgs e)
+        {
+            ctx.Resize();
+            fbo?.Resize(ctx.Width, ctx.Height);
+        }
+
+        private void Form1_ResizeEnd(object? sender, EventArgs e)
+        {
+            //ctx.Resize();
+            //fbo?.Resize(ctx.Width, ctx.Height);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -20,7 +39,7 @@ namespace GLSharp.Testapp
             angle += timer1.Interval / 1000f;
 
             ctx.MakeCurrent();
-            ctx.Resize();
+            fbo.Bind();
 
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Clear(ClearBufferBits.Color);
@@ -33,7 +52,7 @@ namespace GLSharp.Testapp
             Matrix3x2 mat = Matrix3x2.CreateRotation(angle, center);
 
             GL.MatrixMode(MatrixMode.Modelview);
-            //GL.LoadIdentity();
+
             GL.LoadMatrix(mat);
 
             GL.Begin(PrimitiveType.Triangles);
@@ -50,6 +69,11 @@ namespace GLSharp.Testapp
             GL.Vertex2(p1, p2, p3);
             GL.End();
 
+            GL.Begin(PrimitiveType.Points);
+            GL.Vertex2(center);
+            GL.End();
+
+            fbo.BlitToScreen();
             ctx.SwapBuffer();
         }
     }

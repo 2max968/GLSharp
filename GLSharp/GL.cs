@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,16 +56,51 @@ namespace GLSharp
             MatrixMode((uint)matrixMode);
         }
 
-        public static void LoadMatrix(Matrix3x2 mat)
+        static float[] getColumnMatrix(Matrix3x2 mat)
         {
-            float[] m4x4 = new float[]
+            return new float[]
             {
                 mat.M11, mat.M12, 0, 0,
                 mat.M21, mat.M22, 0, 0,
                 0, 0, 1, 0,
                 mat.M31, mat.M32, 0, 1
             };
-            LoadMatrixf(m4x4);
+        }
+
+        public static float[] getColumnMatrix(Matrix4x4 mat)
+        {
+            return new float[]
+            {
+                mat.M11, mat.M12, mat.M13, mat.M14,
+                mat.M21, mat.M22, mat.M23, mat.M24,
+                mat.M31, mat.M32, mat.M33, mat.M34,
+                mat.M41, mat.M42, mat.M43, mat.M44
+            };
+        }
+
+        public static void LoadMatrix(Matrix3x2 mat)
+        {
+            LoadMatrixf(getColumnMatrix(mat));
+        }
+
+        public static void LoadMatrix(Matrix4x4 mat)
+        {
+            LoadMatrixf(getColumnMatrix(mat));
+        }
+
+        public static void MultMatrix(Matrix3x2 mat)
+        {
+            MultMatrixf(getColumnMatrix(mat));
+        }
+
+        public static void MultMatrix(Matrix4x4 mat)
+        {
+            MultMatrixf(getColumnMatrix(mat));
+        }
+
+        public static void DeleteTexture(uint texture)
+        {
+            DeleteTextures(1, new uint[] { texture });
         }
     }
 }

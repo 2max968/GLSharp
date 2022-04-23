@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace GLSharp.OpenGL
+namespace GLSharp
 {
     public class FrameBufferObject : IDisposable
     {
@@ -16,6 +16,7 @@ namespace GLSharp.OpenGL
         public int Width { get => width; }
         public int Height { get => height; }
         uint msaaTex = 0;
+        int samples;
 
         public FrameBufferObject(int width, int height, int samples = 0)
         {
@@ -23,6 +24,7 @@ namespace GLSharp.OpenGL
             this.width = width;
             this.height = height;
             this.msaa = samples > 0;
+            this.samples = samples;
             if (!this.msaa)
             {
                 Texture = GLSharp.Texture.LoadTexture(IntPtr.Zero, width, height);
@@ -50,8 +52,8 @@ namespace GLSharp.OpenGL
             uint fbo2 = WRITE_FBO;
             GLEXT.glDeleteFramebuffers(1, ref fbo);
             GLEXT.glDeleteFramebuffers(1, ref fbo2);
-            GL.DeleteTextures(1, new uint[] { Texture });
-            GL.DeleteTextures(1, new uint[] { msaaTex });
+            GL.DeleteTexture(Texture);
+            GL.DeleteTexture(msaaTex);
         }
 
         public void Bind()
@@ -77,6 +79,26 @@ namespace GLSharp.OpenGL
             }
         }
 
+        public void BlitToScreen()
+        {
+            blitFBO(FBO, 0, width, height);
+        }
+
+        public void Resize(int width, int height)
+        {
+            GL.BindTexture(GL.TEXTURE_2D, Texture);
+            GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, width, height,
+                0, GL.RGBA, GL.UNSIGNED_BYTE, IntPtr.Zero);
+            if(msaaTex != 0)
+            {
+                GL.BindTexture(GL.TEXTURE_2D_MULTISAMPLE, msaaTex);
+                GLEXT.glTexImage2DMultisample(GL.TEXTURE_2D_MULTISAMPLE, samples, GL.RGBA, width, height, false);
+            }
+            GL.BindTexture(GL.TEXTURE_2D, 0);
+            this.width = width;
+            this.height = height;
+        }
+
         static uint createFBO(uint texture, int w, int h)
         {
             uint fbo = 0;
@@ -88,7 +110,7 @@ namespace GLSharp.OpenGL
             GLEXT.glBindFramebuffer(GL.FRAMEBUFFER, fbo);
             GL.Viewport(0, 0, w, h);
             GL.MatrixMode(GL.PROJECTION);
-            GL.Ortho(0, w, 0, h, 1, -1);
+            GL.Ortho(0, w, h, 0, 1, -1);
             GL.MatrixMode(GL.MODELVIEW);
             if(GLEXT.glCheckFramebufferStatus(GL.FRAMEBUFFER) != GL.FRAMEBUFFER_COMPLETE)
             {
@@ -112,9 +134,12 @@ namespace GLSharp.OpenGL
             GLEXT.glDrawBuffers(1, ref fbo);
             GLEXT.glBindFramebuffer(GL.FRAMEBUFFER, fbo);
             GL.Viewport(0, 0, w, h);
+            GL.MatrixMode(GL.PROJECTION);
+            GL.Ortho(0, w, h, 0, 1, -1);
+            GL.MatrixMode(GL.MODELVIEW);
             if (GLEXT.glCheckFramebufferStatus(GL.FRAMEBUFFER) != GL.FRAMEBUFFER_COMPLETE)
             {
-                GL.DeleteTextures(1, new uint[] { tex });
+                GL.DeleteTexture(tex);
                 return 0;
             }
             return fbo;
