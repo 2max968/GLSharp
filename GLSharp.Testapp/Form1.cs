@@ -20,6 +20,8 @@ namespace GLSharp.Testapp
 
             this.ResizeEnd += Form1_ResizeEnd;
             this.Resize += Form1_Resize;
+
+            //ShaderProgram prog = ShaderProgram.CreateStdShader(Resource1.VertexShader, Resource1.FragmentShader);
         }
 
         private void Form1_Resize(object? sender, EventArgs e)
@@ -41,15 +43,18 @@ namespace GLSharp.Testapp
             ctx.MakeCurrent();
             fbo.Bind();
 
-            GL.ClearColor(Color4.CornflowerBlue);
+            GL.ClearColor(Color4.Maroon);
             GL.Clear(ClearBufferBits.Color);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            //GL.Ortho(0, ctx.Width, ctx.Height, 0, -1, 1);
 
             Vector2 center = new Vector2(ClientSize.Width / 2, ClientSize.Height / 2);
             Vector2 p1 = center - new Vector2(200, 200);
             Vector2 p2 = center - new Vector2(-200, 200);
             Vector2 p3 = center + new Vector2(0, 200);
-
-            Matrix3x2 mat = Matrix3x2.CreateRotation(angle, center);
+            var mat = Matrix4x4.CreateRotationZ(angle, new Vector3(center, 0));
+            //mat *= Matrix4x4.CreateRotationX(angle * .5f, new Vector3(center, 0));
 
             GL.MatrixMode(MatrixMode.Modelview);
 
@@ -74,6 +79,7 @@ namespace GLSharp.Testapp
             GL.End();
 
             fbo.BlitToScreen();
+
             ctx.SwapBuffer();
         }
     }

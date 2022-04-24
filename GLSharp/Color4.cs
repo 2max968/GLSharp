@@ -33,5 +33,8 @@ namespace GLSharp
 
         public Color4(System.Drawing.Color color)
             : this(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f) { }
+
+        public Color4(Color4 color, float a)
+            : this(color.R, color.G, color.B, a) { }
     }
 }

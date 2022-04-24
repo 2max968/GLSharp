@@ -102,5 +102,10 @@ namespace GLSharp
         {
             DeleteTextures(1, new uint[] { texture });
         }
+
+        public static void TexParameter(TextureTarget target, TexParam pname, TexParamValue @parameter)
+        {
+            TexParameteri((uint)target, (uint)pname, (int)parameter);
+        }
     }
 }

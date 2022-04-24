@@ -28,27 +28,73 @@ namespace GLSharp
                                                         int width, int height, 
                                                         [MarshalAs(UnmanagedType.I1)] bool fixedsamplelocation);
 
-        public static glGenFramebuffers_del glGenFramebuffers = null;
-        public static glBindFramebuffer_del glBindFramebuffer = null;
-        public static glFramebufferTexture_del glFramebufferTexture = null;
-        public static glDrawBuffers_del glDrawBuffers = null;
-        public static glCheckFramebufferStatus_del glCheckFramebufferStatus = null;
-        public static glDeleteFramebuffers_del glDeleteFramebuffers = null;
-        public static glBindFramebufferEXT_del glBindFramebufferEXT = null;
-        public static glBlitFramebufferEXT_del glBlitFramebufferEXT = null;
-        public static glTexImage2DMultisample_del glTexImage2DMultisample = null;
+        public delegate uint glCreateProgram();
+        public delegate uint glCreateShader(uint shaderType);
+        public delegate void glShaderSource(uint shader, uint count, string[] @string, IntPtr length);
+        public delegate void glCompileShader(uint shader);
+        public delegate void glGetShaderiv(uint shader, uint pname, out int @params);
+        public delegate void glGetShaderInfoLog(uint shader, int maxLength, IntPtr length, StringBuilder infoLog);
+        public delegate void glAttachShader(uint program, uint shader);
+        public delegate void glDeleteShader(uint shader);
+        public delegate void glLinkProgram(uint program);
+        public delegate void glGetProgramiv(uint program, uint pname, out int @params);
+        public delegate void glGetProgramInfoLog(uint program, int maxLength, IntPtr length, StringBuilder infoLog);
+        public delegate void glUseProgram(uint program);
+
+        public static glGenFramebuffers_del GenFramebuffers = null;
+        public static glBindFramebuffer_del BindFramebuffer = null;
+        public static glFramebufferTexture_del FramebufferTexture = null;
+        public static glDrawBuffers_del DrawBuffers = null;
+        public static glCheckFramebufferStatus_del CheckFramebufferStatus = null;
+        public static glDeleteFramebuffers_del DeleteFramebuffers = null;
+        public static glBindFramebufferEXT_del BindFramebufferEXT = null;
+        public static glBlitFramebufferEXT_del BlitFramebufferEXT = null;
+        public static glTexImage2DMultisample_del TexImage2DMultisample = null;
+
+        public static glCreateProgram CreateProgram = null;
+        public static glCreateShader CreateShader = null;
+        public static glShaderSource ShaderSource = null;
+        public static glCompileShader CompileShader = null;
+        public static glGetShaderiv GetShaderiv = null;
+        public static glGetShaderInfoLog GetShaderInfoLog = null;
+        public static glAttachShader AttachShader = null;
+        public static glDeleteShader DeleteShader = null;
+        public static glLinkProgram LinkProgram = null;
+        public static glGetProgramiv GetProgramiv = null;
+        public static glGetProgramInfoLog GetProgramInfoLog = null;
+        public static glUseProgram UseProgram = null;
 
         public static void Init()
         {
-            setPtr("glGenFramebuffers", ref glGenFramebuffers);
-            setPtr("glBindFramebuffer", ref glBindFramebuffer);
-            setPtr("glFramebufferTexture", ref glFramebufferTexture);
-            setPtr("glDrawBuffers", ref glDrawBuffers);
-            setPtr("glCheckFramebufferStatus", ref glCheckFramebufferStatus);
-            setPtr("glDeleteFramebuffers", ref glDeleteFramebuffers);
-            setPtr("glBindFramebufferEXT", ref glBindFramebufferEXT);
-            setPtr("glBlitFramebufferEXT", ref glBlitFramebufferEXT);
-            setPtr("glTexImage2DMultisample", ref glTexImage2DMultisample);
+            setPtr("glGenFramebuffers", ref GenFramebuffers);
+            setPtr("glBindFramebuffer", ref BindFramebuffer);
+            setPtr("glFramebufferTexture", ref FramebufferTexture);
+            setPtr("glDrawBuffers", ref DrawBuffers);
+            setPtr("glCheckFramebufferStatus", ref CheckFramebufferStatus);
+            setPtr("glDeleteFramebuffers", ref DeleteFramebuffers);
+            setPtr("glBindFramebufferEXT", ref BindFramebufferEXT);
+            setPtr("glBlitFramebufferEXT", ref BlitFramebufferEXT);
+            setPtr("glTexImage2DMultisample", ref TexImage2DMultisample);
+            setPtr("glCreateprogram", ref CreateProgram);
+
+            setPtr(ref CreateProgram);
+            setPtr(ref CreateShader);
+            setPtr(ref ShaderSource);
+            setPtr(ref CompileShader);
+            setPtr(ref GetShaderiv);
+            setPtr(ref GetShaderInfoLog);
+            setPtr(ref AttachShader);
+            setPtr(ref DeleteShader);
+            setPtr(ref LinkProgram);
+            setPtr(ref GetProgramiv);
+            setPtr(ref GetProgramInfoLog);
+            setPtr(ref UseProgram);
+        }
+
+        static void setPtr<T>(ref T del) where T : Delegate
+        {
+            string name = typeof(T).Name;
+            setPtr(name, ref del);
         }
 
         static void setPtr<T>(string name, ref T del) where T : Delegate

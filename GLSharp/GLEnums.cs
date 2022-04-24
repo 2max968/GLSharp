@@ -54,4 +54,39 @@ namespace GLSharp
         Texture = GL.TEXTURE,
         Color = GL.COLOR
     }
+
+    public enum TexParam : uint
+    {
+        MinFilter = GL.TEXTURE_MIN_FILTER,
+        MagFilter = GL.TEXTURE_MAG_FILTER,
+        WrapS = GL.TEXTURE_WRAP_S,
+        WrapT = GL.TEXTURE_WRAP_T
+    }
+
+    public enum TexParamValue : uint
+    {
+        Nearest = GL.NEAREST,
+        Linear = GL.LINEAR,
+        NearestMipmapNearest = GL.NEAREST_MIPMAP_NEAREST,
+        LinearMipmapLinear = GL.NEAREST_MIPMAP_LINEAR,
+        NearestMipmapLinear = GL.NEAREST_MIPMAP_LINEAR,
+        ClampToEdge = GL.CLAMP_TO_EDGE_EXT,
+        MirrorRepeat = GL.MIRRORED_REPEAT,
+        Repeat = GL.REPEAT
+    }
+
+    public enum TextureTarget : int
+    {
+        Texture1D = GL.TEXTURE_1D,
+        Texture2D = GL.TEXTURE_2D,
+        Texture3D = GL.TEXTURE_3D,
+        Texture1DArray = GL.TEXTURE_1D_ARRAY,
+        Texture2DArray = GL.TEXTURE_2D_ARRAY,
+        TextureRectangle = GL.TEXTURE_RECTANGLE,
+        TextureCubemap = GL.TEXTURE_CUBE_MAP,
+        TextureCubemapArray = GL.TEXTURE_CUBE_MAP_ARRAY,
+        TextureBuffer = GL.TEXTURE_BUFFER,
+        Texture2DMultisample = GL.TEXTURE_2D_MULTISAMPLE,
+        Texture2DMultisampleArray = GL.TEXTURE_2D_MULTISAMPLE_ARRAY
+    }
 }
