@@ -91,13 +91,13 @@ namespace GLSharp
             setPtr(ref UseProgram);
         }
 
-        static void setPtr<T>(ref T del) where T : Delegate
+        internal static void setPtr<T>(ref T del) where T : Delegate
         {
             string name = typeof(T).Name;
             setPtr(name, ref del);
         }
 
-        static void setPtr<T>(string name, ref T del) where T : Delegate
+        internal static void setPtr<T>(string name, ref T del) where T : Delegate
         {
             if (del != null)
                 return;
