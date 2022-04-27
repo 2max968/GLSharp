@@ -8,6 +8,7 @@ namespace GLSharp
     public class FrameBufferObject : IDisposable
     {
         public uint Texture { get; private set; }
+        public uint DepthTexture { get; private set; }
         public uint FBO { get; private set; }
         //public uint WRITE_FBO { get; private set; } = 0;
         public bool Disposed { get; private set; } = false;
@@ -18,7 +19,7 @@ namespace GLSharp
         //uint msaaTex = 0;
         int samples;
 
-        public FrameBufferObject(int width, int height, int samples = 0)
+        public FrameBufferObject(int width, int height, int samples = 0, bool depthBuffer = false)
         {
             Console.WriteLine("Create FBO {0}", Thread.CurrentThread.ManagedThreadId);
             this.width = width;
@@ -36,15 +37,24 @@ namespace GLSharp
                 FBO = createFBOMultisampling(ref msaaTex, width, height, samples);
                 WRITE_FBO = createFBO(Texture, width, height);
             }*/
+            if(depthBuffer)
+            {
+                uint tex = 0;
+                GL.GenTextures(1, ref tex);
+                GL.BindTexture(GL.TEXTURE_2D, tex);
+                GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RED, width, height, 0, GL.RED, GL.BYTE, IntPtr.Zero);
+                DepthTexture = tex;
+            }
+
             if(!msaa)
             {
                 Texture = GLSharp.Texture.LoadTexture(IntPtr.Zero, width, height);
-                FBO = createFBO(Texture, width, height);
+                FBO = createFBO(Texture, DepthTexture, width, height);
             }
             else
             {
                 uint tex = 0;
-                FBO = createFBOMultisampling(ref tex, width, height, samples);
+                FBO = createFBOMultisampling(ref tex, DepthTexture, width, height, samples);
                 Texture = tex;
             }
         }
@@ -64,6 +74,8 @@ namespace GLSharp
             GLEXT.DeleteFramebuffers(1, ref fbo);
             //GLEXT.glDeleteFramebuffers(1, ref fbo2);
             GL.DeleteTexture(Texture);
+            if (DepthTexture != 0)
+                GL.DeleteTexture(DepthTexture);
             //GL.DeleteTexture(msaaTex);
         }
 
@@ -119,17 +131,28 @@ namespace GLSharp
                     0, GL.RGBA, GL.UNSIGNED_BYTE, IntPtr.Zero);
                 GL.BindTexture(GL.TEXTURE_2D, 0);
             }
+
+            if(DepthTexture != 0)
+            {
+                GL.BindTexture(GL.TEXTURE_2D, DepthTexture);
+                GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RED, width, height,
+                    0, GL.RED, GL.BYTE, IntPtr.Zero);
+                GL.BindTexture(GL.TEXTURE_2D, 0);
+            }
+
             GL.BindTexture(GL.TEXTURE_2D, 0);
             this.width = width;
             this.height = height;
         }
 
-        static uint createFBO(uint texture, int w, int h)
+        static uint createFBO(uint texture, uint depthTexture, int w, int h)
         {
             uint fbo = 0;
             GLEXT.GenFramebuffers(1, ref fbo);
             GLEXT.BindFramebuffer(GL.FRAMEBUFFER, fbo);
             GLEXT.FramebufferTexture(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, texture, 0);
+            if(depthTexture != 0)
+                GLEXT.FramebufferTexture(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, depthTexture, 0);
             uint[] drawBuffers = new uint[] { GL.COLOR_ATTACHMENT0 };
             GLEXT.DrawBuffers(1, ref fbo);
             GLEXT.BindFramebuffer(GL.FRAMEBUFFER, fbo);
@@ -144,7 +167,7 @@ namespace GLSharp
             return fbo;
         }
 
-        static uint createFBOMultisampling(ref uint tex, int w, int h, int samples)
+        static uint createFBOMultisampling(ref uint tex, uint depthTexture, int w, int h, int samples)
         {
             tex = 0;
             GL.GenTextures(1, ref tex);
@@ -155,6 +178,8 @@ namespace GLSharp
             GLEXT.GenFramebuffers(1, ref fbo);
             GLEXT.BindFramebuffer(GL.FRAMEBUFFER, fbo);
             GLEXT.FramebufferTexture(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, (uint)tex, 0);
+            if (depthTexture != 0)
+                GLEXT.FramebufferTexture(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, depthTexture, 0);
             uint[] drawBuffers = new uint[] { GL.COLOR_ATTACHMENT0 };
             GLEXT.DrawBuffers(1, ref fbo);
             GLEXT.BindFramebuffer(GL.FRAMEBUFFER, fbo);

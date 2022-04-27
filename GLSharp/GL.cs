@@ -107,5 +107,10 @@ namespace GLSharp
         {
             TexParameteri((uint)target, (uint)pname, (int)parameter);
         }
+
+        public static void DepthFunc(DepthTest depthTest)
+        {
+            DepthFunc((uint)depthTest);
+        }
     }
 }

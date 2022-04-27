@@ -19,6 +19,8 @@ namespace GLSharp
         public static extern bool MakeCurrent(IntPtr hdc, IntPtr hglrc);
         [DllImport(LIB, EntryPoint = "wglGetProcAddress")]
         public static extern IntPtr GetProcAddress(string name);
+        [DllImport(LIB, EntryPoint = "wglGetCurrentContext")]
+        public static extern IntPtr GetCurrentContext();
 
         public static wglSwapIntervalEXT SwapIntervalEXT;
 

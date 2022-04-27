@@ -1,6 +1,6 @@
 ﻿namespace GLSharp.Testapp
 {
-    partial class Form1
+    partial class FrmFramebuffers
     {
         /// <summary>
         ///  Required designer variable.

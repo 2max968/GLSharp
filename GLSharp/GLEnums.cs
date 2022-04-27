@@ -89,4 +89,16 @@ namespace GLSharp
         Texture2DMultisample = GL.TEXTURE_2D_MULTISAMPLE,
         Texture2DMultisampleArray = GL.TEXTURE_2D_MULTISAMPLE_ARRAY
     }
+
+    public enum DepthTest
+    {
+        Never = GL.NEVER,
+        Always = GL.ALWAYS,
+        Less = GL.LESS,
+        Greater = GL.GREATER,
+        Equal = GL.EQUAL,
+        LessEqual = GL.LEQUAL,
+        GreaterEqual = GL.GEQUAL,
+        NotEqual = GL.NOTEQUAL
+    }
 }

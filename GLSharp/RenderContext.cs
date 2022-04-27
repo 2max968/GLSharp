@@ -71,6 +71,8 @@ namespace GLSharp
 
         public bool SwapBuffer()
         {
+            if (!IsCurrent())
+                MakeCurrent();
             return GdiPlus.SwapBuffers(this.HDC);
         }
 
@@ -83,6 +85,8 @@ namespace GLSharp
 
         public bool SetVSync(bool vsync)
         {
+            if (!IsCurrent())
+                MakeCurrent();
             if (WGL.SwapIntervalEXT == null)
                 return false;
             WGL.SwapIntervalEXT(vsync ? 1u : 0u);
@@ -93,6 +97,11 @@ namespace GLSharp
         {
             if (!Disposed)
                 Util.Leackage(this);
+        }
+
+        public bool IsCurrent()
+        {
+            return WGL.GetCurrentContext() == HGLRC;
         }
     }
 

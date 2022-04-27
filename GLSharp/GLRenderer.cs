@@ -13,13 +13,13 @@ namespace GLSharp
             GL.Color3f(1, 1, 1);
             GL.BindTexture(GL.TEXTURE_2D, texture);
             GL.Begin(GL.QUADS);
-            GL.TexCoord2f(0, 0);
-            GL.Vertex2(p1);
-            GL.TexCoord2f(1, 0);
-            GL.Vertex2(p2);
-            GL.TexCoord2f(1, 1);
-            GL.Vertex2(p3);
             GL.TexCoord2f(0, 1);
+            GL.Vertex2(p1);
+            GL.TexCoord2f(1, 1);
+            GL.Vertex2(p2);
+            GL.TexCoord2f(1, 0);
+            GL.Vertex2(p3);
+            GL.TexCoord2f(0, 0);
             GL.Vertex2(p4);
             GL.End();
             GL.BindTexture(GL.TEXTURE_2D, 0);
@@ -46,6 +46,18 @@ namespace GLSharp
             GL.End();
         }
 
+        public static void DrawRect(Color4 color, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
+        {
+            GL.Color(color);
+            GL.BindTexture(GL.TEXTURE_2D, 0);
+            GL.Begin(GL.QUADS);
+            GL.Vertex3(p1);
+            GL.Vertex3(p2);
+            GL.Vertex3(p3);
+            GL.Vertex3(p4);
+            GL.End();
+        }
+
         public static void DrawRect(Color4 color, Rect rect)
         {
             Vector2 p1 = new Vector2(rect.Left, rect.Top);
@@ -61,6 +73,15 @@ namespace GLSharp
             Vector2 p2 = new Vector2(rect.Right, rect.Top);
             Vector2 p3 = new Vector2(rect.Right, rect.Bottom);
             Vector2 p4 = new Vector2(rect.Left, rect.Bottom);
+            DrawRect(color, p1, p2, p3, p4);
+        }
+
+        public static void DrawRect(Color4 color, RectF rect, float z)
+        {
+            Vector3 p1 = new Vector3(rect.Left, rect.Top, z);
+            Vector3 p2 = new Vector3(rect.Right, rect.Top, z);
+            Vector3 p3 = new Vector3(rect.Right, rect.Bottom, z);
+            Vector3 p4 = new Vector3(rect.Left, rect.Bottom, z);
             DrawRect(color, p1, p2, p3, p4);
         }
 
