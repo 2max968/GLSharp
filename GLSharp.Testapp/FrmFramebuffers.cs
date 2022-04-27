@@ -96,6 +96,7 @@ namespace GLSharp.Testapp
             GL.Clear(ClearBufferBits.Color);
             stp.Start();
             ctx.SetVSync(false);
+            ctx.Projection = new ProjectionPixel();
 
             trailFbo.Unbind();
             GL.Enable(GL.BLEND);

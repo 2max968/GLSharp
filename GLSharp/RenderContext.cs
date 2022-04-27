@@ -23,6 +23,18 @@ namespace GLSharp
         public int Width => clientArea.Width;
         public int Height => clientArea.Height;
 
+        IProjectionDescription projection = new ProjectionOrthographic(-1, 1, -1, 1, -1, 1);
+        public IProjectionDescription Projection
+        {
+            get => projection;
+            set
+            {
+                projection = value;
+                calcProjection();
+            }
+        }
+        public int Fov { get; private set; }
+
         public RenderContext(IntPtr hwnd, RenderContextSettings settings = null)
         {
             this.HWND = hwnd;
@@ -44,16 +56,25 @@ namespace GLSharp
         {
             this.clientArea = clientArea;
             GL.Viewport(clientArea.X, clientArea.Y, clientArea.Width, clientArea.Height);
-            GL.MatrixMode(GL.PROJECTION);
+            /*GL.MatrixMode(GL.PROJECTION);
             GL.LoadIdentity();
             GL.Ortho(clientArea.Left, clientArea.Right, clientArea.Bottom, clientArea.Top, -1, 1);
-            GL.MatrixMode(GL.MODELVIEW);
+            GL.MatrixMode(GL.MODELVIEW);*/
+            calcProjection();
         }
 
         public void Resize()
         {
             if (User32.GetClientRect(this.HWND, out Rect bounds))
                 Resize(bounds);
+        }
+
+        void calcProjection()
+        {
+            if (!IsCurrent())
+                MakeCurrent();
+            GL.MatrixMode(MatrixMode.Projection);
+            Projection.CalculateProjection(Width, Height);
         }
 
         protected void initAsync()

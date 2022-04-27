@@ -18,41 +18,41 @@ namespace GLSharp
         public int Height { get => height; }
         //uint msaaTex = 0;
         int samples;
+        public ClearBufferBits BlitBuffers { get; private set; } = ClearBufferBits.Color;
 
         public FrameBufferObject(int width, int height, int samples = 0, bool depthBuffer = false)
         {
-            Console.WriteLine("Create FBO {0}", Thread.CurrentThread.ManagedThreadId);
             this.width = width;
             this.height = height;
             this.msaa = samples > 0;
             this.samples = samples;
-            /*if (!this.msaa)
-            {
-                Texture = GLSharp.Texture.LoadTexture(IntPtr.Zero, width, height);
-                FBO = createFBO(Texture, width, height);
-            }
-            else
-            {
-                Texture = GLSharp.Texture.LoadTexture(IntPtr.Zero, width, height);
-                FBO = createFBOMultisampling(ref msaaTex, width, height, samples);
-                WRITE_FBO = createFBO(Texture, width, height);
-            }*/
-            if(depthBuffer)
-            {
-                uint tex = 0;
-                GL.GenTextures(1, ref tex);
-                GL.BindTexture(GL.TEXTURE_2D, tex);
-                GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RED, width, height, 0, GL.RED, GL.BYTE, IntPtr.Zero);
-                DepthTexture = tex;
-            }
 
             if(!msaa)
             {
+                if (depthBuffer)
+                {
+                    uint dtex = 0;
+                    GL.GenTextures(1, ref dtex);
+                    GL.BindTexture(GL.TEXTURE_2D, dtex);
+                    GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RED, width, height, 0, GL.RED, GL.BYTE, IntPtr.Zero);
+                    DepthTexture = dtex;
+                }
+
                 Texture = GLSharp.Texture.LoadTexture(IntPtr.Zero, width, height);
                 FBO = createFBO(Texture, DepthTexture, width, height);
             }
             else
             {
+                if (depthBuffer)
+                {
+                    uint dtex = 0;
+                    GL.GenTextures(1, ref dtex);
+                    GL.BindTexture(GL.TEXTURE_2D_MULTISAMPLE, dtex);
+                    GLEXT.TexImage2DMultisample(GL.TEXTURE_2D_MULTISAMPLE, samples, GL.RED, width, height, false);
+                    //GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RED, width, height, 0, GL.RED, GL.BYTE, IntPtr.Zero);
+                    DepthTexture = dtex;
+                }
+
                 uint tex = 0;
                 FBO = createFBOMultisampling(ref tex, DepthTexture, width, height, samples);
                 Texture = tex;
@@ -157,9 +157,6 @@ namespace GLSharp
             GLEXT.DrawBuffers(1, ref fbo);
             GLEXT.BindFramebuffer(GL.FRAMEBUFFER, fbo);
             GL.Viewport(0, 0, w, h);
-            GL.MatrixMode(GL.PROJECTION);
-            GL.Ortho(0, w, h, 0, 1, -1);
-            GL.MatrixMode(GL.MODELVIEW);
             if(GLEXT.CheckFramebufferStatus(GL.FRAMEBUFFER) != GL.FRAMEBUFFER_COMPLETE)
             {
                 return 0;
@@ -184,9 +181,6 @@ namespace GLSharp
             GLEXT.DrawBuffers(1, ref fbo);
             GLEXT.BindFramebuffer(GL.FRAMEBUFFER, fbo);
             GL.Viewport(0, 0, w, h);
-            GL.MatrixMode(GL.PROJECTION);
-            GL.Ortho(0, w, h, 0, 1, -1);
-            GL.MatrixMode(GL.MODELVIEW);
             if (GLEXT.CheckFramebufferStatus(GL.FRAMEBUFFER) != GL.FRAMEBUFFER_COMPLETE)
             {
                 GL.DeleteTexture(tex);
@@ -195,14 +189,14 @@ namespace GLSharp
             return fbo;
         }
 
-        static void blitFBO(uint fbo_read, uint fbo_write, int srcWidth, int srcHeight, int dstWidth, int dstHeight)
+        void blitFBO(uint fbo_read, uint fbo_write, int srcWidth, int srcHeight, int dstWidth, int dstHeight)
         {
             GL.BindTexture(GL.TEXTURE_2D, 0);
             GLEXT.BindFramebufferEXT(GL.READ_FRAMEBUFFER, fbo_read);
             GLEXT.BindFramebufferEXT(GL.DRAW_FRAMEBUFFER, fbo_write);
             GLEXT.BlitFramebufferEXT(0, 0, srcWidth, srcHeight,
                                         0, 0, dstWidth, dstHeight,
-                                        GL.COLOR_BUFFER_BIT,
+                                        (uint)BlitBuffers,
                                         GL.NEAREST);
             GLEXT.BindFramebufferEXT(GL.READ_FRAMEBUFFER, 0);
             GLEXT.BindFramebufferEXT(GL.DRAW_FRAMEBUFFER, 0);

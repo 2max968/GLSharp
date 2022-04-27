@@ -21,6 +21,19 @@ namespace GLSharp
                 Vertex2f(vertices[i].X, vertices[i].Y);
         }
 
+        public static void Vertex3(params Vector3[] vertices)
+        {
+            for (int i = 0; i < vertices.Length; i++)
+                Vertex3f(vertices[i].X, vertices[i].Y, vertices[i].Z);
+        }
+
+        public static void Vertex3WithNormal(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        {
+            var normal = Vector3.Cross(c - a, b - a).GetNormalized();
+            Normal3f(normal.X, normal.Y, normal.Z);
+            Vertex3(a, b, c, d);
+        }
+
         public static void Vertex3(Vector3 vertex)
         {
             Vertex3f(vertex.X, vertex.Y, vertex.Z);
@@ -111,6 +124,61 @@ namespace GLSharp
         public static void DepthFunc(DepthTest depthTest)
         {
             DepthFunc((uint)depthTest);
+        }
+
+        public static string GetErrorText(uint errorCode)
+        {
+            try
+            {
+                return ((ErrorCode)errorCode).ToString();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static void RaiseException()
+        {
+            var error = GL.GetError();
+            if (error != 0)
+            {
+                Exception ex = new Exception($"OpenGl Error {error}");
+                try
+                {
+                    var errorName = Enum.GetName(typeof(ErrorCode), (ErrorCode)error);
+                    ex = new Exception($"OpenGl Error {errorName}({error})");
+                }
+                catch { }
+                throw ex;
+            }
+        }
+
+        public static void ShowErrorMessage()
+        {
+            uint error;
+            List<string> errors = new List<string>();
+            while((error = GL.GetError()) != 0)
+            {
+                string eText = GetErrorText(error);
+                if (eText == null) errors.Add($"{eText} ({error})");
+                else errors.Add($"Unknown ({error})");
+            }
+
+            if(errors.Count > 0)
+            {
+                User32.MessageBoxW(IntPtr.Zero, string.Join("\n", errors), "OpenGL Error", MessageBoxType.IconError | MessageBoxType.ButtonOk);
+            }
+        }
+
+        public static void ClearErrors()
+        {
+            uint error;
+            do
+            {
+                error = GetError();
+            }
+            while (error != 0);
         }
     }
 }

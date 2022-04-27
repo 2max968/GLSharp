@@ -97,9 +97,9 @@ namespace GLSharp
             Vector2 norm = new Vector2(-con.Y, con.X);
             norm *= width / 2 / norm.Length();
             GL.Begin(GL.QUADS);
-            GL.Vertex2(p1 + norm);
-            GL.Vertex2(p2 + norm);
             GL.Vertex2(p2 - norm);
+            GL.Vertex2(p2 + norm);
+            GL.Vertex2(p1 + norm);
             GL.Vertex2(p1 - norm);
             GL.End();
         }
@@ -114,9 +114,9 @@ namespace GLSharp
                 Vector2 con = p2 - p1;
                 Vector2 norm = new Vector2(-con.Y, con.X);
                 norm *= width / 2 / norm.Length();
-                GL.Vertex2(p1 + norm);
-                GL.Vertex2(p2 + norm);
                 GL.Vertex2(p2 - norm);
+                GL.Vertex2(p2 + norm);
+                GL.Vertex2(p1 + norm);
                 GL.Vertex2(p1 - norm);
             }
             GL.End();

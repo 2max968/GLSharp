@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
 using System.Text;
 
@@ -80,6 +81,11 @@ namespace GLSharp
         public static implicit operator Color4(Vector3 v)
         {
             return new Color4(v.X, v.Y, v.Z);
+        }
+
+        public override string ToString()
+        {
+            return String.Format(CultureInfo.InvariantCulture, "<r={0},g={1},b={2},a={3}>", R, G, B, A);
         }
     }
 }
