@@ -23,7 +23,7 @@ foreach (var color in colors)
         var g = color.Value.G;
         var b = color.Value.B;
         Console.WriteLine("\t\t///<summary>");
-        Console.WriteLine("\t\t///#{0:X2}{1:X2}{2:X2}", r, g, b);
+        Console.WriteLine("\t\t///hex = #{0:X2}{1:X2}{2:X2}, rgb = ({0},{1},{2})", r, g, b);
         Console.WriteLine("\t\t///</summary>");
         Console.WriteLine("\t\tpublic static readonly Color4 {0} = new Color4({1}f, {2}f, {3}f);",
             color.Item1, color.Value.R / 255f, color.Value.G / 255f, color.Value.B / 255f);

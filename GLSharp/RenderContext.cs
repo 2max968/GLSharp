@@ -6,19 +6,33 @@ namespace GLSharp
 {
     public abstract class RenderContext : IDisposable
     {
+        /// <summary>
+        /// Window Handle
+        /// </summary>
         public IntPtr HWND { get; private set; }
+        /// <summary>
+        /// Device Context Handle
+        /// </summary>
         public IntPtr HDC { get; private set; }
+        /// <summary>
+        /// OpenGL Render Context Handle
+        /// </summary>
         public IntPtr HGLRC { get; private set; }
         public bool Disposed { get; private set; } = false;
         Rect clientArea;
         public int Width => clientArea.Width;
         public int Height => clientArea.Height;
 
-        public RenderContext(IntPtr hwnd)
+        public RenderContext(IntPtr hwnd, RenderContextSettings settings = null)
         {
             this.HWND = hwnd;
             this.HDC = User32.GetDC(this.HWND);
             PIXELFORMATDESCRIPTOR pfd = PIXELFORMATDESCRIPTOR.Create();
+            if(settings != null)
+            {
+                if (settings.DoubleBuffer) pfd.dwFlags |= GdiPlus.PFD_DOUBLEBUFFER;
+                else pfd.dwFlags &= ~(uint)GdiPlus.PFD_DOUBLEBUFFER;
+            }
             int iPixelFormat = GdiPlus.ChoosePixelFormat(this.HDC, ref pfd);
             GdiPlus.SetPixelFormat(this.HDC, iPixelFormat, ref pfd);
 
@@ -47,6 +61,7 @@ namespace GLSharp
             this.HGLRC = WGL.CreateContext(this.HDC);
             WGL.MakeCurrent(HDC, HGLRC);
             GLEXT.Init();
+            WGL.Init();
         }
 
         public bool MakeCurrent()
@@ -66,6 +81,14 @@ namespace GLSharp
             WGL.DeleteContext(this.HGLRC);
         }
 
+        public bool SetVSync(bool vsync)
+        {
+            if (WGL.SwapIntervalEXT == null)
+                return false;
+            WGL.SwapIntervalEXT(vsync ? 1u : 0u);
+            return true;
+        }
+
         ~RenderContext()
         {
             if (!Disposed)
@@ -75,8 +98,8 @@ namespace GLSharp
 
     public class AsyncRenderContext : RenderContext
     {
-        public AsyncRenderContext(IntPtr hwnd)
-            : base(hwnd) { }
+        public AsyncRenderContext(IntPtr hwnd, RenderContextSettings settings = null)
+            : base(hwnd, settings) { }
 
         public void InitAsync()
         {
@@ -86,10 +109,15 @@ namespace GLSharp
 
     public class NormalRenderContext : RenderContext
     {
-        public NormalRenderContext(IntPtr hWnd)
-            : base(hWnd)
+        public NormalRenderContext(IntPtr hWnd, RenderContextSettings settings = null)
+            : base(hWnd, settings)
         {
             base.initAsync();
         }
+    }
+
+    public class RenderContextSettings
+    {
+        public bool DoubleBuffer { get; set; } = true;
     }
 }

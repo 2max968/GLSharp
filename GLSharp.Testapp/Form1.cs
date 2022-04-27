@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 
 namespace GLSharp.Testapp
@@ -7,23 +8,55 @@ namespace GLSharp.Testapp
         AsyncRenderContext ctx;
         FrameBufferObject fbo;
         float angle = 0;
+        float omega = 3;
         bool running = true;
         bool sizeChanged = true;
         Thread renderThread;
         int frameCounter = 0;
         bool outline = true;
+        Stopwatch stp = new Stopwatch();
+        bool left = false, right = false;
 
         public Form1()
         {
             InitializeComponent();
 
-            ctx = new AsyncRenderContext(Handle);
+            ctx = new AsyncRenderContext(Handle, new RenderContextSettings() { DoubleBuffer = true});
 
             this.Resize += Form1_Resize;
             this.FormClosing += Form1_FormClosing;
 
             renderThread = new Thread(renderLoop);
             renderThread.Start();
+
+            this.KeyDown += Form1_KeyDown;
+            this.KeyUp += Form1_KeyUp;
+        }
+
+        private void Form1_KeyUp(object? sender, KeyEventArgs e)
+        {
+            switch(e.KeyCode)
+            {
+                case Keys.Left:
+                    left = false;
+                    break;
+                case Keys.Right:
+                    right = false;
+                    break;
+            }
+        }
+
+        private void Form1_KeyDown(object? sender, KeyEventArgs e)
+        {
+            switch(e.KeyCode)
+            {
+                case Keys.Left:
+                    left = true;
+                    break;
+                case Keys.Right:
+                    right = true;
+                    break;
+            }
         }
 
         private void Form1_FormClosing(object? sender, FormClosingEventArgs e)
@@ -36,9 +69,13 @@ namespace GLSharp.Testapp
         {
             ctx.InitAsync();
             fbo = new FrameBufferObject(ctx.Width, ctx.Height, 8);
+            stp.Start();
 
             while (running)
             {
+                float dt = stp.ElapsedMilliseconds / 1000f;
+                stp.Restart();
+
                 if(sizeChanged)
                 {
                     sizeChanged = false;
@@ -46,7 +83,8 @@ namespace GLSharp.Testapp
                     fbo.Resize(ctx.Width, ctx.Height);
                 }
 
-                angle += .016f;
+                if (right) angle -= omega * dt;
+                if (left) angle += omega * dt;
 
                 ctx.MakeCurrent();
                 fbo.Bind();
@@ -89,6 +127,7 @@ namespace GLSharp.Testapp
 
                 GL.Begin(PrimitiveType.Points);
                 GL.Vertex2(center);
+                GL.Vertex2f(10, 10);
                 GL.End();
 
                 fbo.BlitToScreen();

@@ -8,32 +8,32 @@ namespace GLSharp
     [StructLayout(LayoutKind.Sequential)]
     public struct PIXELFORMATDESCRIPTOR
     {
-        UInt16 nSize;
-        UInt16 nVersion;
-        UInt32 dwFlags;
-        byte iPixelType;
-        byte cColorBits;
-        byte cRedBits;
-        byte cRedShift;
-        byte cGreenBits;
-        byte cGreenShift;
-        byte cBlueBits;
-        byte cBlueShift;
-        byte cAlphaBits;
-        byte cAlphaShift;
-        byte cAccumBits;
-        byte cAccumRedBits;
-        byte cAccumGreenBits;
-        byte cAccumBlueBits;
-        byte cAccumAlphaBits;
-        byte cDepthBits;
-        byte cStencilBits;
-        byte cAuxBuffers;
-        byte iLayerType;
-        byte bReserved;
-        UInt32 dwLayerMask;
-        UInt32 dwVisibleMask;
-        UInt32 dwDamageMask;
+        public UInt16 nSize;
+        public UInt16 nVersion;
+        public UInt32 dwFlags;
+        public byte iPixelType;
+        public byte cColorBits;
+        public byte cRedBits;
+        public byte cRedShift;
+        public byte cGreenBits;
+        public byte cGreenShift;
+        public byte cBlueBits;
+        public byte cBlueShift;
+        public byte cAlphaBits;
+        public byte cAlphaShift;
+        public byte cAccumBits;
+        public byte cAccumRedBits;
+        public byte cAccumGreenBits;
+        public byte cAccumBlueBits;
+        public byte cAccumAlphaBits;
+        public byte cDepthBits;
+        public byte cStencilBits;
+        public byte cAuxBuffers;
+        public byte iLayerType;
+        public byte bReserved;
+        public UInt32 dwLayerMask;
+        public UInt32 dwVisibleMask;
+        public UInt32 dwDamageMask;
 
         public static PIXELFORMATDESCRIPTOR Create()
         {
