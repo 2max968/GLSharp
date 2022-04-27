@@ -70,10 +70,11 @@ namespace GLSharp.Testapp
             ctx.InitAsync();
             fbo = new FrameBufferObject(ctx.Width, ctx.Height, 8);
             stp.Start();
+            ctx.SetVSync(false);
 
             while (running)
             {
-                float dt = stp.ElapsedMilliseconds / 1000f;
+                float dt = stp.ElapsedTicks / (float)Stopwatch.Frequency;
                 stp.Restart();
 
                 if(sizeChanged)
