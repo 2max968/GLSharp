@@ -51,6 +51,7 @@ namespace GLSharp
             GL.Color(color);
             GL.BindTexture(GL.TEXTURE_2D, 0);
             GL.Begin(GL.QUADS);
+            GL.Normal3f(0, 0, -1);
             GL.Vertex3(p1);
             GL.Vertex3(p2);
             GL.Vertex3(p3);
@@ -107,6 +108,7 @@ namespace GLSharp
         public static void DrawLineStrip(Vector2[] points, float width)
         {
             GL.Begin(GL.QUADS);
+            GL.Normal3f(0, 0, -1);
             for (int i = 1; i < points.Length; i++)
             {
                 Vector2 p1 = points[i - 1];

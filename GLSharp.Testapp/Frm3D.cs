@@ -54,19 +54,15 @@ namespace GLSharp.Testapp
             GLEnable.ColorMaterial = true;
 
             GLEnable.Lighting = true;
-            GL.RaiseException();
-            Light.Directional.Enabled = false;
-            GL.RaiseException();
+            Light.Directional.Enabled = true;
             Light.Directional.Diffuse = Color4.Silver;
-            GL.RaiseException();
-            Light.Directional.Position = new Vector3(1, -1, 1);
-            GL.RaiseException();
+            Light.Directional.Position = new Vector3(1, -1, 1).GetNormalized();
+            Light.Directional.ConstantAttenuation = 3;
 
-            GL.RaiseException();
             Light.Light1.Enabled = true;
-            GL.RaiseException();
             Light.Light1.Diffuse = Color4.White;
-            GL.RaiseException();
+            Light.Light1.LinearAttenuation = 10f;
+            Light.Light1.ConstantAttenuation = 0;
 
             //GL.Lightfv(0, GL.AMBIENT, new float[] { .5f, 0, 0, 1 });
 
@@ -105,9 +101,9 @@ namespace GLSharp.Testapp
                 GL.MatrixMode(MatrixMode.Modelview);
                 
                 GL.LoadMatrix(lightMat);
-                var lPos = new Vector3(1, 0, 1.5f);
+                var lPos = new Vector3(1.4f, 0, 2.5f);
                 Light.Light1.Position = lPos;
-                GLRenderer.DrawRect(Color4.YellowGreen, new RectF(lPos.X - .2f, lPos.Y - .2f, .4f, .4f), lPos.Z + .01f);
+                //GLRenderer.DrawRect(Color4.YellowGreen, new RectF(lPos.X - .2f, lPos.Y - .2f, .4f, .4f), lPos.Z + .01f);
 
                 GL.LoadMatrix(mat);
 

@@ -10,7 +10,6 @@ namespace GLSharp
         public uint Texture { get; private set; }
         public uint DepthTexture { get; private set; }
         public uint FBO { get; private set; }
-        //public uint WRITE_FBO { get; private set; } = 0;
         public bool Disposed { get; private set; } = false;
         bool msaa = false;
         int width, height;
