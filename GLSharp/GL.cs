@@ -180,5 +180,10 @@ namespace GLSharp
             }
             while (error != 0);
         }
+
+        public static void BindTexture(TextureTarget target, uint texture)
+        {
+            BindTexture((uint)target, texture);
+        }
     }
 }

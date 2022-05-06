@@ -66,7 +66,7 @@ namespace GLSharp.Testapp
 
             //GL.Lightfv(0, GL.AMBIENT, new float[] { .5f, 0, 0, 1 });
 
-            fbo = new FrameBufferObject(ctx.Width, ctx.Height, 8, true);
+            fbo = new FrameBufferObject(ctx.Width, ctx.Height, 0, true);
             GL.DepthFunc(DepthTest.LessEqual);
             Stopwatch stp = new Stopwatch();
             stp.Start();
@@ -137,7 +137,14 @@ namespace GLSharp.Testapp
                 GL.Translatef(0,0, MathF.Sin(time / 2) * 5 + 5);
                 GLRenderer.DrawRing(new Vector2(3, 0), .5f, .05f, 50);
 
+                
+
                 fbo.BlitToScreen();
+                fbo.Unbind();
+                GL.LoadIdentity();
+                //GLEnable.Lighting = false;
+                //GLRenderer.DrawTexture(fbo.DepthTexture, new Rect(-1, -1, 2, 2));
+                //GLEnable.Lighting = true;
                 ctx.SwapBuffer();
                 frameCounter++;
             }
