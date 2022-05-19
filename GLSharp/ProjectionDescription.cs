@@ -105,4 +105,30 @@ namespace GLSharp
             GL.Ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
         }
     }
+
+    public class ProjectionThrustum : IProjectionDescription
+    {
+        float width;
+        float height;
+        float near;
+        float far;
+
+        public ProjectionThrustum(float width, float height, float near, float far)
+        {
+            this.width = width;
+            this.height = height;
+            this.near = near;
+            this.far = far;
+        }
+
+        public void CalculateProjection(int width, int height)
+        {
+            float halfWidth = width * .5f;
+            float halfHeight = height * .5f;
+
+            GL.LoadIdentity();
+            GL.Frustum(-halfWidth, halfWidth, -halfWidth, halfWidth, near, far);
+            GL.Ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, near, far);
+        }
+    }
 }

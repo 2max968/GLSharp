@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace GLSharp.Testapp
 {
     internal static class Program
@@ -8,15 +10,21 @@ namespace GLSharp.Testapp
         [STAThread]
         static void Main()
         {
-            Quaternion a = new Quaternion(1, 1, 0, 0);
-            Quaternion b = new Quaternion(0, 1, -1, 1);
-            Console.WriteLine($"{a}+{b}={a+b}");
-            Console.WriteLine($"{a}*{b}={a*b}");
+            Random rnd = new Random();
+            for(int i = 0; i < 10; i++)
+            {
+                var q = new Quaternion(rnd.Next(-100, 100), rnd.Next(-100, 100), rnd.Next(-100, 100), rnd.Next(-100,100));
+                Console.WriteLine($"{q} -> {q * q.GetInverse()}");
+            }
+            Vector3 x = new Vector3(1, 0, 0);
+            Quaternion rot = Quaternion.Rotation(new Vector3(0, 0, 10), (float)Math.PI / 2f);
+            Vector3 x_ = rot * x;
+            Console.WriteLine($"{x} -> {x_}");
 
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Frm3D());
+            Application.Run(new FrmQuaternion());
         }
     }
 }

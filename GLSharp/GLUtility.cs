@@ -22,5 +22,15 @@ namespace GLSharp
         {
             return v / v.Length();
         }
+
+        public static Matrix4x4 Position(this Matrix4x4 mat, float x, float y, float z)
+        {
+            return Matrix4x4.CreateTranslation(-x, -y, -z) * mat * Matrix4x4.CreateTranslation(x, y, z);
+        }
+
+        public static Matrix4x4 Position(this Matrix4x4 mat, Vector3 pos)
+        {
+            return Matrix4x4.CreateTranslation(-pos) * mat * Matrix4x4.CreateTranslation(pos);
+        }
     }
 }
