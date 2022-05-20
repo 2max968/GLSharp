@@ -54,13 +54,13 @@ namespace GLSharp.Testapp
         void bgrLoop()
         {
             ctx.InitAsync();
-            //ctx.Projection = new ProjectionOrthographic(-1, 1, -1, 1, -1, 1);
+            ctx.Projection = new ProjectionOrthographic(-1, 1, -1, 1, -1, 1);
             //ctx.Projection = new ProjectionPerspective(90, .1f, 100);
-            ctx.Projection = new ProjectionThrustum(.1f, .1f, .1f, 100);
+            //ctx.Projection = new ProjectionThrustum(.1f, .1f, .1f, 100);
             while(!stop)
             {
                 float t = stp.ElapsedTicks / (float)Stopwatch.Frequency;
-                float z = 2;
+                float z = 0;
 
                 ctx.MakeCurrent();
                 if (resize)
@@ -71,15 +71,16 @@ namespace GLSharp.Testapp
 
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.LoadIdentity();
+                var quat = Quaternion.Rotation(new Vector3(0, .1f, 1), t);
                 //GL.LoadMatrix(Quaternion.Rotation(new Vector3(0, .1f, 1), t).ToMatrix().Position(0, 0, z));
 
                 GL.Begin(PrimitiveType.Quads);
                 GL.Color(Color4.Blue);
-                GL.Vertex3f(-.5f, -.5f, z);
-                GL.Vertex3f(.5f, -.5f, z);
+                GL.Vertex3(quat * new Vector3(-.5f, -.5f, z));
+                GL.Vertex3(quat * new Vector3(.5f, -.5f, z));
                 GL.Color(Color4.CadetBlue);
-                GL.Vertex3f(.5f, .5f, z);
-                GL.Vertex3f(-.5f, .5f, z);
+                GL.Vertex3(quat * new Vector3(.5f, .5f, z));
+                GL.Vertex3(quat * new Vector3(-.5f, .5f, z));
                 GL.Color(Color4.Red);
                 GL.Vertex3f(.01f, 0.01f, z);
                 GL.Vertex3f(-.01f, 0.01f, z);
